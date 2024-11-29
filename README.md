@@ -14,8 +14,3 @@ A real-time chat application built with Django, Django Channels, and WebSockets.
 - channels-redis==4.0.0
 - djangorestframework==3.14.0
 - redis==4.3.4
-
-### **1. Clone the Repository**
-```bash
-git clone https://github.com/your-username/realtime-chat.git
-cd realtime-chat
