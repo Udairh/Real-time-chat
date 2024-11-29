@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room - {{ room_name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Chat Room: {{ room_name }}
+        </div>
+
+        <div class="chat-log" id="chat-log"></div>
+
+        <div class="input-container">
+            <input id="chat-message-input" type="text" placeholder="Type your message..." autocomplete="off">
+            <button id="chat-message-send">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const roomName = "{{ room_name }}";
+        const chatSocket = new WebSocket(
+        `ws://${window.location.host}/ws/chat/${roomName}/`
+        );
+
+    
+        // Log when WebSocket connection is established
+        chatSocket.onopen = function(e) {
+            console.log("WebSocket connection established:", e);
+        };
+    
+        // Log when a message is received
+        chatSocket.onmessage = function(e) {
+            console.log("Message received from WebSocket:", e.data);
+            const data = JSON.parse(e.data);
+            const message = data.message;
+            const messageType = data.messageType || 'user-message';  // Default is 'user-message'
+    
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message;
+            messageElement.classList.add(messageType);
+    
+            document.querySelector('#chat-log').appendChild(messageElement);
+            document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
+        };
+    
+        // Log WebSocket connection closure
+        chatSocket.onclose = function(e) {
+            console.error('WebSocket connection closed:', e);
+        };
+    
+        // Handle WebSocket errors
+        chatSocket.onerror = function(e) {
+            console.error('WebSocket error:', e);
+        };
+    
+        // Send message when the button is clicked
+        document.querySelector('#chat-message-send').onclick = function(e) {
+            const messageInput = document.querySelector('#chat-message-input');
+            const message = messageInput.value.trim();
+            if (message) {
+                // Log the message sent
+                console.log("Message sent:", message);
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'messageType': 'user-message'  // User message type
+                }));
+                messageInput.value = '';
+            }
+        };
+    </script>
+    
+    
+</body>
+</html>

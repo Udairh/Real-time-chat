@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Rooms</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Choose a Room
+        </div>
+        <form action="{% url 'room' room_name='test-room' %}">
+            <input type="text" name="room_name" placeholder="Enter Room Name" required>
+            <button type="submit">Join Room</button>
+        </form>
+    </div>
+</body>
+</html>
